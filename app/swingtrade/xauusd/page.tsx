@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { CandlestickData } from "lightweight-charts";
 import useSWR from "swr";
 import Chart from "@/app/components/markets/Chart/Chart";
@@ -8,7 +8,6 @@ import Chart from "@/app/components/markets/Chart/Chart";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const CoinPriceChart = () => {
-  const chartContainerRef = useRef<HTMLDivElement>(null);
   const { data } = useSWR<CandlestickData[]>(
     "http://localhost:3001/test",
     fetcher
@@ -30,7 +29,24 @@ const CoinPriceChart = () => {
       .then((res) => setIndicatorsData(res));
   }, [data]);
 
-  return <Chart data={data} title={"Test"} indicatorsData={indicatorsData} />;
+  return (
+    <div className="flex flex-col w-screen h-screen">
+      <Chart
+        data={data}
+        indicatorsData={indicatorsData}
+        symbolName={"XAUUSD"}
+        timeframe={"12h"}
+        broker={"OANDA"}
+      />
+      <Chart
+        data={data}
+        indicatorsData={indicatorsData}
+        symbolName={"XAUUSD"}
+        timeframe={"1D"}
+        broker={"OANDA"}
+      />
+    </div>
+  );
 };
 
 export default CoinPriceChart;
